@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-web
+  namespace: default  # Specify your namespace
+spec:
+  type: LoadBalancer
+  ports:
+    - name: web
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: airflow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-postgresql
+  namespace: default  # Specify your namespace
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgresql
+      port: 5432
+  selector:
+    app: airflow-postgresql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-postgresql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-postgresql
+  template:
+    metadata:
+      labels:
+        app: airflow-postgresql
+    spec:
+      containers:
+        - name: postgresql
+          image: bitnami/postgresql:latest
+          env:
+            - name: POSTGRESQL_USERNAME
+              value: airflow
+            - name: POSTGRESQL_PASSWORD
+              value: airflowpass
+            - name: POSTGRESQL_DATABASE
+              value: airflow
+          ports:
+            - containerPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-web
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow
+  template:
+    metadata:
+      labels:
+        app: airflow
+    spec:
+      containers:
+        - name: airflow
+          image: bitnami/airflow:latest
+          env:
+            - name: AIRFLOW_DATABASE_URL
+              value: postgresql://airflow:airflowpass@airflow-postgresql:5432/airflow
+            - name:
