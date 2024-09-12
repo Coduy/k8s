@@ -65,7 +65,7 @@ metadata:
   name: spark-master-svc
   namespace: default # Specify your namespace
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: spark-master
     port: 7077
