@@ -2,9 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress-controller
-  namespace: kube-system
-  labels:
-    app: nginx-ingress
+  namespace: ingress-nginx
 spec:
   replicas: 1
   selector:
@@ -17,27 +15,25 @@ spec:
     spec:
       containers:
       - name: nginx-ingress-controller
-        image: nginx/nginx-ingress:latest
-        args:
-        - /nginx-ingress-controller
-        - --default-backend-service=kube-system/default-http-backend
+        image: nginx-ingress-controller:latest
         ports:
         - containerPort: 80
         - containerPort: 443
+        # Add other configurations as needed
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nginx-ingress-controller
-  namespace: kube-system
+  namespace: ingress-nginx
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
+  - name: http
+    port: 80
     targetPort: 80
-    protocol: TCP
-  - port: 443
+  - name: https
+    port: 443
     targetPort: 443
-    protocol: TCP
   selector:
     app: nginx-ingress
