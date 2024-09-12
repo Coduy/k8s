@@ -10,7 +10,8 @@ spec:
       port: 8080
       targetPort: 8080
   selector:
-    app: airflow
+    app: airflow-web  # Match the label in the Deployment
+
 ---
 apiVersion: v1
 kind: Service
@@ -22,8 +23,10 @@ spec:
   ports:
     - name: postgresql
       port: 5432
+      targetPort: 5432  # Added targetPort for clarity
   selector:
-    app: airflow-postgresql
+    app: airflow-postgresql  # Match the label in the Deployment
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -52,6 +55,7 @@ spec:
               value: airflow
           ports:
             - containerPort: 5432
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -62,11 +66,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: airflow
+      app: airflow-web  # Match the label in the Service
   template:
     metadata:
       labels:
-        app: airflow
+        app: airflow-web  # Match the label in the Service
     spec:
       containers:
         - name: airflow
