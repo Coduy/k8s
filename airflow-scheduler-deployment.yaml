@@ -14,11 +14,30 @@ spec:
         app: airflow-scheduler
     spec:
       containers:
-        - name: scheduler
+        - name: airflow-scheduler
           image: puckel/docker-airflow:1.10.9
           command: ["airflow", "scheduler"]
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap
+          volumeMounts:
+            - name: logs-volume
+              mountPath: /mnt/airflow/logs
+            - name: requirements-volume
+              mountPath: /requirements
+            - name: dags-host-volume
+              mountPath: /mnt/airflow/dags
           ports:
-            - containerPort: 8793  # Optional, used for communication
+            - containerPort: 8793
+      volumes:
+        - name: logs-volume
+          persistentVolumeClaim:
+            claimName: airflow-logs-pvc
+        - name: requirements-volume
+          configMap:
+            name: requirements-configmap
+        - name: dags-host-volume
+          hostPath:
+            path: /mnt/airflow/dags
+            type: Directory
+

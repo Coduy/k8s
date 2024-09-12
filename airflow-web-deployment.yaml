@@ -14,20 +14,29 @@ spec:
         app: airflow
     spec:
       containers:
-        - name: airflow
+        - name: airflow-web
           image: puckel/docker-airflow:1.10.9
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap
           volumeMounts:
+            - name: logs-volume
+              mountPath: /mnt/airflow/logs
             - name: requirements-volume
               mountPath: /requirements
+            - name: dags-host-volume
+              mountPath: /mnt/airflow/dags
           ports:
             - containerPort: 8080
       volumes:
+        - name: logs-volume
+          persistentVolumeClaim:
+            claimName: airflow-logs-pvc
         - name: requirements-volume
           configMap:
             name: requirements-configmap
-            items:
-              - key: requirements.txt
-                path: requirements.txt
+        - name: dags-host-volume
+          hostPath:
+            path: /mnt/airflow/dags
+            type: Directory
+
