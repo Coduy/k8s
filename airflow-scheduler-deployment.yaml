@@ -21,8 +21,8 @@ spec:
             - configMapRef:
                 name: airflow-envvars-configmap
           volumeMounts:
-            - name: logs-volume
-              mountPath: /mnt/airflow/logs
+#            - name: logs-volume
+#              mountPath: /mnt/airflow/logs
             - name: requirements-volume
               mountPath: /requirements
             - name: dags-host-volume
