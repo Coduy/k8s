@@ -1,89 +1,145 @@
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: airflow-web
-  namespace: default
+  name: airflow
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-logs
+  namespace: airflow
 spec:
-  type: LoadBalancer
-  ports:
-    - name: web
-      port: 8080
-      targetPort: 8080
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-dags
+  namespace: airflow
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: airflow
+spec:
+  replicas: 1
   selector:
-    app: airflow
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:11
+          env:
+            - name: POSTGRES_USER
+              value: airflow
+            - name: POSTGRES_PASSWORD
+              value: airflow
+            - name: POSTGRES_DB
+              value: airflow
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-data
+      volumes:
+        - name: postgres-data
+          emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: airflow-postgresql
-  namespace: default
+  name: postgres
+  namespace: airflow
 spec:
   type: ClusterIP
   ports:
-    - name: postgresql
-      port: 5432
+    - port: 5432
   selector:
-    app: airflow-postgresql
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: airflow-postgresql
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: airflow-postgresql
-  template:
-    metadata:
-      labels:
-        app: airflow-postgresql
-    spec:
-      containers:
-        - name: postgresql
-          image: bitnami/postgresql:latest
-          env:
-            - name: POSTGRESQL_USERNAME
-              value: airflow
-            - name: POSTGRESQL_PASSWORD
-              value: airflowpass
-            - name: POSTGRESQL_DATABASE
-              value: airflow
-          ports:
-            - containerPort: 5432
+    app: postgres
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: airflow-web
-  namespace: default
+  namespace: airflow
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: airflow
+      app: airflow-web
   template:
     metadata:
       labels:
-        app: airflow
+        app: airflow-web
     spec:
       containers:
-        - name: airflow
-          image: bitnami/airflow:latest
+        - name: airflow-web
+          image: puckel/docker-airflow:latest
           env:
-            - name: AIRFLOW_DATABASE_URL
-              value: postgresql://airflow:airflowpass@airflow-postgresql:5432/airflow
-            - name: AIRFLOW__CORE__EXECUTOR
+            - name: LOAD_EX
+              value: "n"
+            - name: EXECUTOR
               value: LocalExecutor
+            - name: AIRFLOW__CORE__FERNET_KEY
+              value: "YOUR_FERNET_KEY"
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - mountPath: /usr/local/airflow/logs
+              name: airflow-logs
+            - mountPath: /usr/local/airflow/dags
+              name: airflow-dags
+      volumes:
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: airflow-logs
+        - name: airflow-dags
+          persistentVolumeClaim:
+            claimName: airflow-dags
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-web
+  namespace: airflow
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: airflow-web
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: airflow-scheduler
-  namespace: default
+  namespace: airflow
 spec:
   replicas: 1
   selector:
@@ -95,13 +151,26 @@ spec:
         app: airflow-scheduler
     spec:
       containers:
-        - name: scheduler
-          image: bitnami/airflow:latest
-          command: ["airflow", "scheduler"]
+        - name: airflow-scheduler
+          image: puckel/docker-airflow:latest
           env:
-            - name: AIRFLOW_DATABASE_URL
-              value: postgresql://airflow:airflowpass@airflow-postgresql:5432/airflow
-            - name: AIRFLOW__CORE__EXECUTOR
+            - name: LOAD_EX
+              value: "n"
+            - name: EXECUTOR
               value: LocalExecutor
-          ports:
-            - containerPort: 8793  # Optional, used for communication
+            - name: AIRFLOW__CORE__FERNET_KEY
+              value: "YOUR_FERNET_KEY"
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+          volumeMounts:
+            - mountPath: /usr/local/airflow/logs
+              name: airflow-logs
+            - mountPath: /usr/local/airflow/dags
+              name: airflow-dags
+      volumes:
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: airflow-logs
+        - name: airflow-dags
+          persistentVolumeClaim:
+            claimName: airflow-dags
