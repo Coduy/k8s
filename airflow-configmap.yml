@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: airflow-envvars-configmap
-  namespace: airflow  # Ensure it's in the same namespace as your Airflow deployments
+  namespace: default  # Ensure it's in the same namespace as your Airflow deployments
 data:
   EXECUTOR: Kubernetes
   POSTGRES_HOST: postgres
