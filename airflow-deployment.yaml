@@ -74,4 +74,7 @@ spec:
           env:
             - name: AIRFLOW_DATABASE_URL
               value: postgresql://airflow:airflowpass@airflow-postgresql:5432/airflow
-            - name:
+            - name: AIRFLOW__CORE__EXECUTOR
+              value: LocalExecutor
+          ports:
+            - containerPort: 8080
