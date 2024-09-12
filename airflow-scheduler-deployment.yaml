@@ -30,9 +30,9 @@ spec:
           ports:
             - containerPort: 8793
       volumes:
-        - name: logs-volume
-          persistentVolumeClaim:
-            claimName: airflow-logs-pvc
+#        - name: logs-volume
+#          persistentVolumeClaim:
+#            claimName: airflow-logs-pvc
         - name: requirements-volume
           configMap:
             name: requirements-configmap
