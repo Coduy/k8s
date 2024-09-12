@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-web
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow
+  template:
+    metadata:
+      labels:
+        app: airflow
+    spec:
+      containers:
+        - name: airflow
+          image: puckel/docker-airflow:1.10.9
+          envFrom:
+            - configMapRef:
+                name: airflow-envvars-configmap
+          volumeMounts:
+            - name: requirements-volume
+              mountPath: /requirements
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: requirements-volume
+          configMap:
+            name: requirements-configmap
+            items:
+              - key: requirements.txt
+                path: requirements.txt
