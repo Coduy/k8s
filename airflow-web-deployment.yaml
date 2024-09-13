@@ -19,6 +19,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"  # This is the CPU requested by the pod
+            limits:
+              cpu: "300m"
+              memory: "256mi"          
           volumeMounts:
             - name: logs-volume
               mountPath: /mnt/airflow/logs
