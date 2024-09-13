@@ -17,6 +17,11 @@ spec:
         - name: airflow-scheduler
           image: puckel/docker-airflow:1.10.9
           args: ["scheduler"]
+          resources:
+            requests:
+              cpu: "250m"  # This is the CPU requested by the pod
+            limits:
+              cpu: "300m"     # This is the maximum CPU the pod can use
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap    
