@@ -25,7 +25,7 @@ spec:
               memory: "128Mi"  # This is the CPU requested by the pod
             limits:
               cpu: "300m"
-              memory: "256mi"          
+              memory: "256Mi"          
           volumeMounts:
             - name: logs-volume
               mountPath: /mnt/airflow/logs
