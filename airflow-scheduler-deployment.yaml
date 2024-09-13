@@ -20,8 +20,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap
-          resources: 
-            limits: 512Mi      
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"  # Example of specifying CPU requests
+            limits:
+              memory: "512Mi"
+              cpu: "500m"  # Example of specifying CPU limits     
           volumeMounts:
             - name: logs-volume
               mountPath: /usr/local/airflow/logs
