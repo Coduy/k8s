@@ -25,7 +25,7 @@ spec:
 #              mountPath: /mnt/airflow/logs
             - name: requirements-volume
               mountPath: /requirements
-            - name: dags-host-volume
+            - name: dags-volume
               mountPath: /mnt/airflow/dags
           ports:
             - containerPort: 8793
@@ -36,8 +36,7 @@ spec:
         - name: requirements-volume
           configMap:
             name: requirements-configmap
-        - name: dags-host-volume
-          hostPath:
-            path: /mnt/airflow/dags
-            type: Directory
+        - name: dags-volume
+          persistentVolumeClaim:
+            claimName: azure-file-pvc
 
