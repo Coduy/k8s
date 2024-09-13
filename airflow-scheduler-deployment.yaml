@@ -21,7 +21,7 @@ spec:
             - configMapRef:
                 name: airflow-envvars-configmap
           resources: 
-            limits: "512Mi"      
+            limits: 512Mi      
           volumeMounts:
             - name: logs-volume
               mountPath: /usr/local/airflow/logs
