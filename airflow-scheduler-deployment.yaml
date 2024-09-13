@@ -16,27 +16,27 @@ spec:
       containers:
         - name: airflow-scheduler
           image: puckel/docker-airflow:1.10.9
-          command: ["airflow", "scheduler"]
+          args: ["scheduler"]
           envFrom:
             - configMapRef:
                 name: airflow-envvars-configmap
+          resources: 
+            limits: "512Mi"      
           volumeMounts:
-#            - name: logs-volume
-#              mountPath: /mnt/airflow/logs
+            - name: logs-volume
+              mountPath: /usr/local/airflow/logs
             - name: requirements-volume
               mountPath: /requirements
             - name: dags-volume
-              mountPath: /mnt/airflow/dags
-          ports:
-            - containerPort: 8793
+              mountPath: /usr/local/airflow/dags
       volumes:
-#        - name: logs-volume
-#          persistentVolumeClaim:
-#            claimName: airflow-logs-pvc
+        - name: logs-volume
+          persistentVolumeClaim:
+            claimName: test-pvc-4
         - name: requirements-volume
           configMap:
             name: requirements-configmap
         - name: dags-volume
           persistentVolumeClaim:
-            claimName: azure-file-pvc
+            claimName: test-pvc-4
 
