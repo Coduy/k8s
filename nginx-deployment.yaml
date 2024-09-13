@@ -20,6 +20,10 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 81
+      volumes:
+      - name: azure
+        persistentVolumeClaim:
+          claimName: azurefilenginx  
 ---
 apiVersion: v1
 kind: Service
