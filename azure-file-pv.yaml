@@ -7,7 +7,7 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteMany
-  storageClassName: azurefile
+  storageClassName: azurefile2
   azureFile:
     secretName: azure-storage-secret
     shareName: myfileshare
