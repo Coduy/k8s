@@ -1,31 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: airflow-postgresql
-  namespace: default
+  name: postgres
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: airflow-postgresql
+      app: postgres
+  replicas: 1
   template:
     metadata:
       labels:
-        app: airflow-postgresql
+        app: postgres
     spec:
       containers:
-        - name: postgresql
-          image: bitnami/postgresql:latest
-          resources:
-            limits:
-              memory: 128Mi
-              cpu: 500m
-          env:
-            - name: POSTGRESQL_USERNAME
-              value: airflow
-            - name: POSTGRESQL_PASSWORD
-              value: airflowpass
-            - name: POSTGRESQL_DATABASE
-              value: airflow
-          ports:
-            - containerPort: 5432
+      - name: postgres
+        image: postgres:14
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 500m
+        ports:
+        - containerPort: 5432        
+        env:
+        - name: POSTGRES_PASSWORD
+          value: airflow
+        - name: POSTGRES_USER
+          value: airflow
+        - name: POSTGRES_DB
+          value: airflow

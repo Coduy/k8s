@@ -14,29 +14,30 @@ spec:
         app: airflow-scheduler
     spec:
       containers:
-        - name: airflow-scheduler
-          image: puckel/docker-airflow:1.10.9
-          args: ["scheduler"]
-          resources:
-            requests:
-              cpu: "250m"  # This is the CPU requested by the pod
-            limits:
-              cpu: "300m"     # This is the maximum CPU the pod can use
-          envFrom:
-            - configMapRef:
-                name: airflow-envvars-configmap    
-          volumeMounts:
-            - name: logs-volume
-              mountPath: /usr/local/airflow/logs
-            - name: requirements-volume
-              mountPath: /requirements
-            - name: dags-volume
-              mountPath: /usr/local/airflow/dags
+      - name: airflow-scheduler
+        image: puckel/docker-airflow:1.10.9
+        args: ["scheduler"]
+        resources:
+          requests:
+            cpu: "250m"  # This is the CPU requested by the pod
+          limits:
+            cpu: "300m"     # This is the maximum CPU the pod can use
+        envFrom:
+          - configMapRef:
+              name: airflow-envvars-configmap    
+        volumeMounts:
+          - name: logs-volume
+            mountPath: /usr/local/airflow/logs
+          - name: requirements-configmap
+            subPath: "requirements.txt"
+            mountPath: "/requirements.txt"
+          - name: dags-volume
+            mountPath: /usr/local/airflow/dags
       volumes:
         - name: logs-volume
           persistentVolumeClaim:
             claimName: test-pvc-4
-        - name: requirements-volume
+        - name: requirements-configmap
           configMap:
             name: requirements-configmap
         - name: dags-volume
