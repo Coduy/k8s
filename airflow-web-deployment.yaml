@@ -17,6 +17,7 @@ spec:
       containers:
       - name: airflow-webserver
         image: puckel/docker-airflow:1.10.9
+   # This is the maximum CPU the pod can use
         envFrom:
           - configMapRef:
               name: airflow-envvars-configmap
