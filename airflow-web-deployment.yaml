@@ -27,10 +27,14 @@ spec:
           - name: requirements-configmap
             subPath: "requirements.txt"
             mountPath: "/requirements.txt"
+          - name: azure-disk
+            mountPath: /mnt/azure-disk  
       volumes:
       - name: requirements-configmap
         configMap:
           name: requirements-configmap
-
+      - name: azure-disk
+        persistentVolumeClaim:
+          claimName: my-pvc 
 
 
