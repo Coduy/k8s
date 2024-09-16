@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-worker
+  labels:
+    app: airflow-worker
+spec:
+  selector:
+    matchLabels:
+      app: airflow-worker
+  replicas: 1  # Adjust the number of replicas based on your needs
+  template:
+    metadata:
+      labels:
+        app: airflow-worker
+    spec:
+      containers:
+      - name: airflow-worker
+        image: puckel/docker-airflow:1.10.9
+        envFrom:
+          - configMapRef:
+              name: airflow-envvars-configmap
+        volumeMounts:
+          - name: requirements-configmap
+            subPath: "requirements.txt"
+            mountPath: "/requirements.txt"
+      volumes:
+      - name: requirements-configmap
+        configMap:
+          name: requirements-configmap
