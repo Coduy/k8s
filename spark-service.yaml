@@ -8,6 +8,6 @@ spec:
     app: spark
   ports:
     - protocol: TCP
-      port: 8090
+      port: 8080
       targetPort: 8080
   type: LoadBalancer  # Adjust if you need an external IP or LoadBalancer
