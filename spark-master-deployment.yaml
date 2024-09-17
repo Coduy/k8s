@@ -23,3 +23,5 @@ spec:
           value: "master"  # or "worker" depending on the role of the container
         - name: SPARK_MASTER_URL
           value: "spark://spark-master:7077"  # Adjust as needed
+        - name: SPARK_HADOOP_FS_DEFAULTFS
+          value: "hdfs://namenode:8020"
