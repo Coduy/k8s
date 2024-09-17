@@ -7,11 +7,11 @@ spec:
   replicas: 1  # Adjust the number of replicas as needed
   selector:
     matchLabels:
-      app: spark
+      app: spark-master
   template:
     metadata:
       labels:
-        app: spark
+        app: spark-master
     spec:
       containers:
       - name: spark
@@ -23,6 +23,3 @@ spec:
           value: "master"  # or "worker" depending on the role of the container
         - name: SPARK_MASTER_URL
           value: "spark://spark-master:7077"  # Adjust as needed
-
-
-

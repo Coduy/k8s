@@ -22,4 +22,4 @@ spec:
         - name: SPARK_MODE
           value: "worker"  # Worker mode
         - name: SPARK_MASTER_URL
-          value: "spark://spark-master:7077"  # Pointing to the Spark Master service
+          value: "spark://spark-master-service:7077"  # Pointing to the Spark Master service
