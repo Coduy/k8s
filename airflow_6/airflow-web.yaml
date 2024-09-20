@@ -41,7 +41,10 @@ spec:
           - name: AIRFLOW__KUBERNETES__DAGS_IN_IMAGE
             value: "False" 
           - name: AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE
-            value: /opt/airflow/pod_template.yaml            
+            value: /opt/airflow/pod_template.yaml
+          - name: AIRFLOW__KUBERNETES__WORKER_ENV_VARS__AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+            value: "postgresql+psycopg2://airflow:your_password@airflow-postgres:5432/airflow_db"
+            
 
         command: ["bash", "-c", "airflow db init && airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin && airflow webserver"]
         volumeMounts:
