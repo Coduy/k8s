@@ -25,9 +25,11 @@ spec:
           - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
             value: "postgresql+psycopg2://airflow:your_password@airflow-postgres:5432/airflow_db"
           - name: AIRFLOW__KUBERNETES__LOGS_VOLUME_HOST
-            value: "/mnt/azure-disk/logs"
+            value: "/mnt/azure-file/logs"
           - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST
-            value: "/mnt/azure-disk/dags"
+            value: "/mnt/azure-file/dags"
+          - name: AIRFLOW__CORE__DAGS_FOLDER
+            value: "/mnt/azure-file/dags"
   
         command: ["bash", "-c", "airflow scheduler"]
         volumeMounts:
