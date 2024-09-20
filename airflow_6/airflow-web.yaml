@@ -1,53 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: airflow-web
+  name: airflow-webserver
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: airflow-web
+      app: airflow-webserver
   template:
     metadata:
       labels:
-        app: airflow-web
+        app: airflow-webserver
     spec:
+      securityContext:
+        fsGroup: 1000  # Group ID that has access to the volume
       containers:
-      - name: airflow-web
+      - name: airflow-webserver
         image: apache/airflow:2.6.0
         env:
           - name: AIRFLOW__CORE__EXECUTOR
-            value: "KubernetesExecutor"
+            value: "KubernetesExecutor" 
           - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
             value: "postgresql+psycopg2://airflow:your_password@airflow-postgres:5432/airflow_db"
-          - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST
-            value: "/mnt/azure-disk/dags"
           - name: AIRFLOW__KUBERNETES__LOGS_VOLUME_HOST
             value: "/mnt/azure-disk/logs"
-        ports:
-        - containerPort: 8080
+          - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST
+            value: "/mnt/azure-disk/dags"
+
+        command: ["bash", "-c", "airflow db init && airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin && airflow webserver"]
         volumeMounts:
           - name: azure-disk
             mountPath: /mnt/azure-disk
       volumes:
       - name: azure-disk
         persistentVolumeClaim:
-          claimName: my-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: airflow-web
-spec:
-  ports:
-  - port: 8080
-  selector:
-    app: airflow-web
+          claimName: airflow-webserver-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: my-pvc
+  name: airflow-webserver-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -55,3 +47,16 @@ spec:
   resources:
     requests:
       storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-webserver
+spec:
+  type: ClusterIP  # Change to LoadBalancer if you want external access
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: airflow-webserver
