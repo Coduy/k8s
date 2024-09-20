@@ -17,6 +17,14 @@ spec:
         image: nginx:alpine
         ports:
         - containerPort: 80
+        volumeMounts:
+          - mountPath: /mnt/azure-file
+            name: volume
+            readOnly: false
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: my-azurefile
 ---
 apiVersion: v1
 kind: Service
