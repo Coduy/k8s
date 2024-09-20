@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-web
+  template:
+    metadata:
+      labels:
+        app: airflow-web
+    spec:
+      containers:
+      - name: airflow-web
+        image: apache/airflow:2.6.0
+        env:
+          - name: AIRFLOW__CORE__EXECUTOR
+            value: "KubernetesExecutor"
+          - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+            value: "postgresql+psycopg2://airflow:your_password@airflow-postgres:5432/airflow_db"
+          - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST
+            value: "/mnt/azure-disk/dags"
+          - name: AIRFLOW__KUBERNETES__LOGS_VOLUME_HOST
+            value: "/mnt/azure-disk/logs"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: azure-disk
+            mountPath: /mnt/azure-disk
+      volumes:
+      - name: azure-disk
+        persistentVolumeClaim:
+          claimName: my-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-web
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: airflow-web
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: managed
+  resources:
+    requests:
+      storage: 1Gi

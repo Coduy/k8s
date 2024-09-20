@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: spark
-        image: bitnami/spark:latest
+        image: bitnami/spark:3.5.0
         ports:
         - containerPort: 8080  # Spark default port
         env:
@@ -25,3 +25,7 @@ spec:
           value: "spark://spark-master:7077"  # Adjust as needed
         - name: SPARK_HADOOP_FS_DEFAULTFS
           value: "hdfs://namenode:8020"
+        - name: SPARK_EVENT_LOG_ENABLED
+          value: "true"
+        - name: SPARK_EVENT_LOG_DIR
+          value: "/tmp/spark-logs"

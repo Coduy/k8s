@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: spark-worker
-        image: bitnami/spark:latest
+        image: bitnami/spark:3.5.0
         ports:
         - containerPort: 8081  # Default worker web UI port
         env:
@@ -23,3 +23,7 @@ spec:
           value: "worker"  # Worker mode
         - name: SPARK_MASTER_URL
           value: "spark://spark-master-service:7077"  # Pointing to the Spark Master service
+        - name: SPARK_EVENT_LOG_ENABLED
+          value: "true"
+        - name: SPARK_EVENT_LOG_DIR
+          value: "/tmp"
