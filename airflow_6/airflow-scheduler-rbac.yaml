@@ -5,9 +5,14 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pods-permissions
 rules:
+# permissions for pods
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch", "create", "delete"]
+ # permission for scaling deployments   
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "update", "patch"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
