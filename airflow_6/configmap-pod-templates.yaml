@@ -12,7 +12,7 @@ data:
     spec:
       containers:
         - name: airflow-worker
-          image: apache/airflow:2.6.0
+          image: okrx/airflow-custom-kubectl:latest
           env:
             - name: AIRFLOW__CORE__DAGS_FOLDER
               value: /mnt/azure-file/dags
