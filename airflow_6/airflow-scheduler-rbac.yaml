@@ -11,7 +11,7 @@ rules:
     verbs: ["get", "list", "watch", "create", "delete"]
  # permission for scaling deployments   
   - apiGroups: ["apps"]
-    resources: ["deployments"]
+    resources: ["deployments", "deployments/scale"]
     verbs: ["get", "list", "watch", "update", "patch"]
 ---
 kind: ClusterRoleBinding

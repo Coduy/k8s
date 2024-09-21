@@ -45,6 +45,25 @@ start_nginx = PythonOperator(
     dag=dag,
 )
 
+# Function to delete the job pod
+def delete_job_pod():
+    result = subprocess.run(
+        ['kubectl', 'delete', 'pod', '--selector=job-name=train-model-job', '-n', 'default'],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise Exception(f"Failed to delete the pod: {result.stderr}")
+    return result.stdout
+
+# Task to delete the job pod
+delete_pod = PythonOperator(
+    task_id='delete_job_pod',
+    python_callable=delete_job_pod,
+    dag=dag,
+)
+
+
 # Dummy end task
 end_task = DummyOperator(
     task_id='end',
@@ -52,4 +71,4 @@ end_task = DummyOperator(
 )
 
 # DAG sequence
-start_task >> start_nginx >> end_task
+start_task >> start_nginx >> delete_pod >> end_task

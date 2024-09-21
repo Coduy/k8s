@@ -29,9 +29,9 @@ spec:
           - name: AIRFLOW__CORE__DAGS_FOLDER
             value: "/mnt/azure-file/dags"
           - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY 
-            value: "okrx/airflow-custom-kubectl:latest"
+            value: "okrx/airflow-custom-kubectl"
           - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
-            value: "2.6.0"
+            value: "latest"
           - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM
             value: "my-azurefile"
           - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_MOUNT_PATH

@@ -24,7 +24,7 @@ spec:
         - name: SPARK_MASTER_URL
           value: "spark://spark-master:7077"  # Adjust as needed
         - name: SPARK_HADOOP_FS_DEFAULTFS
-          value: "hdfs://namenode:8020"
+          value: "hdfs://hdfs-namenode:8020"
         - name: SPARK_EVENT_LOG_ENABLED
           value: "true"
         - name: SPARK_EVENT_LOG_DIR
