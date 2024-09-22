@@ -28,6 +28,14 @@
     <value>0.0.0.0</value>
     </property>
     <!-- /Bind to all interfaces -->
+
+   <!-- Enable WebHDFS -->
+    <property>
+        <name>dfs.webhdfs.enabled</name>
+        <value>true</value>
+    </property>
+
+
     {{- range $key, $value := index .Values.conf "hdfsSite" }}
     <property><name>{{ $key }}</name><value>{{ $value }}</value></property>
     {{- end }}

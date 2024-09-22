@@ -11,9 +11,12 @@ antiAffinity: "soft"
 
 conf:
   coreSite:
+    fs.defaultFS: hdfs://hdfs-release-namenode:8020
+    dfs.webhdfs.enabled: "true"  # Enable WebHDF
     # fs.trash.interval: "10080"  # trash auto purge in minutes
   hdfsSite:
     dfs.replication: 1  # when changing this value ensure that dataNode.replicas is equal or higher than this value
+    dfs.namenode.http-address: hdfs-release-namenode:50070
     # dfs.datanode.du.reserved: "4294967296"  # number of bytes to reserve on disk to block hitting disk full, must be quoted for large numbers, because of gotemplate converting large numbers to float with scientific notation
 
 # httpsfs service

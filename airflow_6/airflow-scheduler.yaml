@@ -16,7 +16,8 @@ spec:
         fsGroup: 1000  # Group ID that has access to the volume
       containers:
       - name: airflow-scheduler
-        image: apache/airflow:2.6.0
+        #image: okrx/airflow-custom-kubectl:v1.3
+        image: okrx/airflow-custom-kubectl:v1.4
         env:
           - name: AIRFLOW__CORE__EXECUTOR
             value: "KubernetesExecutor"
@@ -31,7 +32,7 @@ spec:
           - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY 
             value: "okrx/airflow-custom-kubectl"
           - name: AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG
-            value: "latest"
+            value: "v1.4"
           - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM
             value: "my-azurefile"
           - name: AIRFLOW__KUBERNETES__DAGS_VOLUME_MOUNT_PATH
