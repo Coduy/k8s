@@ -19,7 +19,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    'dag_flujo_spark_test8',
+    'dag_flujo_spark_test9',
     default_args=default_args,
     description='testing with some simple spark',
     schedule_interval=None,
@@ -43,11 +43,13 @@ def start_spark_cluster(**kwargs):
     return worker_name 
 
 
-# Function to stop HDFS cluster
+# Function Start HDFS cluster
 def start_hdfs_cluster():
     subprocess.run(['kubectl', 'scale', '--replicas=1', 'deploy/hdfs-release-httpfs', '-n', 'default'])
+    subprocess.run(['kubectl', 'scale', '--replicas=1', 'statefulset/hdfs-release-datanode', '-n', 'default'])
+    subprocess.run(['kubectl', 'scale', '--replicas=1', 'statefulset/hdfs-release-namenode', '-n', 'default'])
  
-# Task to start HDFS cluster
+# Start HDFS cluster
 start_hdfs = PythonOperator(
     task_id='start_hdfs_cluster',
     python_callable=start_hdfs_cluster,
@@ -102,6 +104,8 @@ def stop_spark_cluster():
 # Function to stop HDFS cluster
 def stop_hdfs_cluster():
     subprocess.run(['kubectl', 'scale', '--replicas=0', 'deploy/hdfs-release-httpfs', '-n', 'default'])
+    subprocess.run(['kubectl', 'scale', '--replicas=0', 'statefulset/hdfs-release-datanode', '-n', 'default'])
+    subprocess.run(['kubectl', 'scale', '--replicas=0', 'statefulset/hdfs-release-namenode', '-n', 'default'])
     
 
 # Task to stop Spark cluster

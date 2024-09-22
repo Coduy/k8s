@@ -98,7 +98,7 @@ pkl_path = modelPath+ "/Prophet.pkl"
 with open(pkl_path, "wb") as f:
     pickle.dump(model, f)
 
-forecast_pd.to_pickle(modelPath+"/forecast.pkl")
+forecast_pd.to_pickle(modelPath+"/forecast_1.pkl")
 print("*** Data Saved ***")
 
 
