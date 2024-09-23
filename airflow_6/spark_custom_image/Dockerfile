@@ -1,6 +1,6 @@
 FROM bitnami/spark:3.5.0
 
-# Install required Python packages
+
 RUN pip install numpy==1.24.3
 RUN pip install pyspark prophet scikit-learn 
 RUN pip install fsspec pyarrow requests

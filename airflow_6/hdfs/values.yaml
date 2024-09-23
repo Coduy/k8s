@@ -31,6 +31,10 @@ nameNode:
     limits:
       memory: "1000Mi"
       cpu: "1000m"
+  service:
+    type: LoadBalancer  # This exposes the NameNode using a LoadBalancer
+    port: 50070         # NameNode UI port
+    annotations: {}     
 
 dataNode:
   replicas: 1  # ensure this value is higher or equal to 'conf.hdfsSite.dfs.replication'

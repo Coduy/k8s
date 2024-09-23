@@ -19,7 +19,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    'dag_flujo_spark_test9',
+    'dag_flujo_spark_test10',
     default_args=default_args,
     description='testing with some simple spark',
     schedule_interval=None,
@@ -60,6 +60,37 @@ start_hdfs = PythonOperator(
 start_spark = PythonOperator(
     task_id='start_spark_cluster',
     python_callable=start_spark_cluster,
+    dag=dag,
+)
+
+# copy train_x.csv to HDFS 
+def upload_csv_to_hdfs():
+    # Path to the local file you want to upload
+    local_file_path = '/mnt/azure-file/upload/train02.csv'
+    
+    # HDFS URL for the WebHDFS API
+    hdfs_url = "http://hdfs-release-namenode:50070/webhdfs/v1/data/train03.csv?op=CREATE&user.name=hdfs"
+
+    #Send the initial request to the NameNode to get the redirection to the DataNode
+    response = requests.put(hdfs_url, allow_redirects=False)
+    
+    if response.status_code == 307:
+        redirected_url = response.headers['Location']
+        
+        with open(local_file_path, 'rb') as file_data:
+            upload_response = requests.put(redirected_url, data=file_data, headers={"Content-Type": "application/octet-stream"})
+            
+            # Check the upload result
+            if upload_response.status_code == 201:
+                print("File uploaded successfully to HDFS.")
+            else:
+                print(f"Failed to upload file: {upload_response.status_code}, {upload_response.text}")
+    else:
+        print(f"Failed to initiate upload: {response.status_code}, {response.text}")
+
+upload_csv = PythonOperator(
+    task_id='upload_csv',
+    python_callable=upload_csv_to_hdfs,
     dag=dag,
 )
 
@@ -129,4 +160,4 @@ end_task = DummyOperator(
 )
 
 # DAG sequence
-start_task >> start_spark >> start_hdfs >> spark_submit_task >> stop_spark >> stop_hdfs >> end_task
+start_task >> start_spark >> start_hdfs >> upload_csv >> spark_submit_task >> stop_spark >> stop_hdfs >> end_task

@@ -60,16 +60,14 @@ def upload_csv_to_hdfs():
     local_file_path = '/mnt/azure-file/upload/train02.csv'
     
     # HDFS URL for the WebHDFS API
-    hdfs_url = "http://hdfs-release-namenode:50070/webhdfs/v1/data/train02.csv?op=CREATE&user.name=hdfs"
+    hdfs_url = "http://hdfs-release-namenode:50070/webhdfs/v1/data/train03.csv?op=CREATE&user.name=hdfs"
 
-    # Step 1: Send the initial request to the NameNode to get the redirection to the DataNode
+    #Send the initial request to the NameNode to get the redirection to the DataNode
     response = requests.put(hdfs_url, allow_redirects=False)
     
     if response.status_code == 307:
-        # Get the redirected location to the DataNode
         redirected_url = response.headers['Location']
         
-        # Step 2: Upload the file to the redirected DataNode URL
         with open(local_file_path, 'rb') as file_data:
             upload_response = requests.put(redirected_url, data=file_data, headers={"Content-Type": "application/octet-stream"})
             
