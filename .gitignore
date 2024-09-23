@@ -1,0 +1,35 @@
+# Logs
+*.log
+*.out
+*.err
+
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+
+# Ignore MacOS system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+
+# Ignore Kubernetes YAML output
+*.yaml~
+
+# Ignore temporary files or directories
+temp/
+*.tmp
+*.bak
+*.swp
+
+# Ignore IDE/project specific files
+.vscode/
+.idea/
+
+# Ignore Docker build files
+*.dockerfile
+
+
+# Ignore bat or ps1 script outputs
+*.bat~
+*.ps1~
