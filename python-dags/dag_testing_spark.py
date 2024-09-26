@@ -19,7 +19,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    'dag_flujo_spark_test10',
+    'dag_flujo_spark_test11',
     default_args=default_args,
     description='testing with some simple spark',
     schedule_interval=None,
