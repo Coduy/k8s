@@ -20,7 +20,7 @@ Before installing Minikube, ensure Docker Desktop is installed and running on yo
 ## Step 2: Install Minikub Manually
 
 1. **Download Minikube**:
-   - Go to the [Minikube releases page](https://github.com/kubernetes/minikube/releases).
+   - Go to the (https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download) or search Minikube Windows Download on Google.
    - Download the **Windows** version of Minikube (e.g., `minikube-installer.exe`).
 
 2. **Install Minikube**:
@@ -28,7 +28,7 @@ Before installing Minikube, ensure Docker Desktop is installed and running on yo
 
 ## Step 3: Start Minikube with Docker as the Driver
 
-Now, let’s start Minikube using Docker as the driver.
+Now, let’s start Minikube using Docker as the driver. Minikube can be run on different driveres, in our case we use  Docker Desktop on Windows (10/11)
 
 1. **Start Minikube**:
    - Open **Command Prompt** or **PowerShell** and run the following command:
