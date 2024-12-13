@@ -46,8 +46,4 @@ Now, let’s start Minikube using Docker as the driver. Minikube can be run on d
 
 ## Step 4: Install kubectl (Kubernetes CLI)
 
-Minikube automatically configures **kubectl**, the Kubernetes CLI tool. If you don’t have it installed yet, follow these steps to install it:
-
-1. **Install kubectl via Chocolatey** (if using Chocolatey):
-   ```powershell
-   choco install kubernetes-cli
+Minikube automatically configures **kubectl**, the Kubernetes CLI tool. If you don’t have it installed yet, install it by searching it on Google. 
