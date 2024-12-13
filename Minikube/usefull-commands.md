@@ -38,10 +38,30 @@ To get detailed information about the Minikube node:
 minikube node list
 ```
 
-
-## 6. List Running Pods and Services
+## 7. Deploy a simple pod 
 
 ```bash
+kubectl apply -f tomcat-deploy.yaml
+```
+
+
+## 8. Expose the Deployment as a Service
+
+```bash
+kubectl expose deployment tomcat-deployment --type=NodePort --port=8080
+```
+
+##  9: Verify Deployment and Pods
+
+Open a new terminal tab and run:
+```bash
+kubectl port-forward pod/tomcat-deployment-XXXXX-XXXXX 8080:8080
+```
+
+##  10: Verify Deployment and Pods
+
+```bash
+kubectl get deployments
 kubectl get pods
-kubectl get svc
+kubectl get services
 ```
