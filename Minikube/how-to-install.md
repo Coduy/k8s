@@ -47,3 +47,31 @@ Now, let’s start Minikube using Docker as the driver. Minikube can be run on d
 ## Step 4: Install kubectl (Kubernetes CLI)
 
 Minikube automatically configures **kubectl**, the Kubernetes CLI tool. If you don’t have it installed yet, install it by searching it on Google. 
+
+
+
+## Step 4: Install Ingress aadon
+
+   - Check the status of your Minikube cluster:
+     ```bash
+     minikube addons enable ingress
+     ```
+
+
+## Step 5: ccess the Application
+
+Expose your app via a service. 
+
+Create an ingress manifest and point service object to it. 
+
+NOTE:
+
+If you're using a cloud provider (like AWS, GCP, or Azure), the Ingress controller will provide you with an external IP or domain name that you can use to access your application.
+If you're using Minikube locally, you can access the Ingress using minikube service command or by setting up port forwarding.
+
+
+You can also skip Ingress Controller and expose service via Minikube:
+minikube service tomcat-service --url
+
+and also, using the same technique you can expose Ingress Contoller: 
+minikube service tomcat-ingress --url 

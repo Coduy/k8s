@@ -8,10 +8,12 @@
 ## Step 1: Create a new Helm skeleton 
 
 ```bash
-helm create tomcat
+helm create nginx. 
 ```
 
 ## Step 2: Edit values.yaml 
+
+Edit values as you wish. 
 
 
 
@@ -19,6 +21,13 @@ helm create tomcat
 
 ```bash
 helm list
-
 helm uninstall <release-name>
+```
+
+## To reinstall a helm release:
+
+```bash
+helm list
+
+helm upgrade <release-name> <chart-name> -n <namespace> -f values.yaml
 ```
