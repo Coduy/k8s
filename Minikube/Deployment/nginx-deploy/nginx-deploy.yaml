@@ -17,3 +17,14 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: custom-html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+        - name: custom-html
+          mountPath: /usr/share/nginx/html/hello.html
+          subPath: hello.html          
+      volumes: 
+        - name: custom-html
+          configMap:
+            name: nginx-index-html
