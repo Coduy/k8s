@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-b-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-b
+  template:
+    metadata:
+      labels:
+        app: nginx-b
+    spec:
+      nodeSelector:
+        zone: node-b
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "nginx-b"
+        effect: "NoSchedule"
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
